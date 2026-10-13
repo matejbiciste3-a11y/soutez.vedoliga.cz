@@ -1,0 +1,41 @@
+VĚDOLIGA — VERZE PRO ŠKOLY
+13. října 2026
+
+Soubory
+index.html — obsah a struktura webu
+styles.css — sjednocený světlý a tmavý vzhled, mobilní zobrazení, tisk
+app.js — trénink, režim promítání, kontrolní seznam a registrace
+favicon.png — ikona webu
+api/registration.js — serverová registrace pro Vercel, Supabase a Resend
+lib/font.js — české písmo pro PDF přílohy
+supabase.sql — databázové schéma a databázové funkce
+vercel.json, package.json, package-lock.json, scripts — sestavení a nasazení
+.env.example — příklad serverových proměnných bez tajných klíčů
+registration.php — volitelná starší alternativa pro PHP hosting, bez PDF příloh
+
+Co nová verze přináší
+Sjednocený vzhled bez vrstev starých přepisů CSS. Přehled informací pro učitele, plán 45minutové hodiny a interaktivní kontrolní seznam. Registrace školy je před tréninkovým kvízem. Formulář kontroluje kontakt, shodu e-mailů, prázdné názvy i duplicity týmů a umožňuje opravu údajů z rekapitulace. Koncept se ukládá pouze na výslovné kliknutí a po úspěšném odeslání se odstraní. Režim promítání zvětší otázky a skryje okolní stránku, ukončuje se tlačítkem nebo Escape. Předvolby tréninku upraví čas a pořadí otázek. Tisk pokynů zahrnuje plán hodiny a reflexi.
+
+Nasazení do existujícího projektu Vercel
+1. Rozbal celý ZIP do jedné složky. V jejím kořeni musí být index.html, package.json a vercel.json.
+2. Nahraj celý projekt do stávajícího projektu soutez.vedoliga. Samotný index.html nestačí. Při použití přihlášeného Vercel CLI spusť v této složce vercel link a vyber existující projekt. Potom vercel --prod.
+3. Nastavení: Framework Other, Build Command npm run build, Output Directory public, Node.js 22.x. Nespojuj výstup se starými soubory v public.
+4. Zachovej serverové proměnné SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, EMAIL_FROM a EMAIL_REPLY_TO. Příklady dalších proměnných jsou v .env.example. Tajné hodnoty nepatří do HTML ani do veřejného repozitáře.
+5. Výstup sestavení obsahuje jen index.html, styles.css, app.js a favicon.png. Serverovou funkci obsluhuje /api/registration. Nepřidávej přesměrování, které by tuto cestu nahrazovalo HTML.
+6. Pokud už registrace na tomto projektu funguje, není kvůli úpravě vzhledu třeba znovu spouštět SQL ani měnit DNS. supabase.sql je přiložený pro nové instalace.
+7. Po stavu Ready otevři https://soutez.vedoliga.cz/, zkontroluj mobilní menu a jednu přihlášku. V evidenci ověř registrační číslo a v Resend stav e-mailu a obě PDF přílohy. Přijetí Resendem není potvrzení doručení do schránky.
+
+Provoz bez Edge Functions
+Web používá standardní serverovou funkci Node.js na Vercelu a databázové SQL funkce. Supabase Edge Function není potřeba. PHP se v tomto nasazení nepoužívá. Starší registration.php nemá stejnou funkčnost jako Node.js backend a není náhradou pro provoz s PDF přílohami.
+
+Místní spuštění
+npm ci
+npm start
+Otevři http://localhost:3000. Pro skutečné registrace zkopíruj .env.example do .env a doplň serverové klíče. S reálnými klíči se skutečně ukládají přihlášky a odesílají e-maily. Otevření HTML dvojklikem registrační server nespustí.
+
+Obsah pro školy
+Trénink je zdarma. Termíny oficiálního kola, oficiální pravidla a případné startovné potvrzuje organizátor individuálně. Web nevytváří žákovské účty a nežádá jména žáků. Formulář přijímá 1 až 20 týmů se 2 až 5 hráči. Na sdíleném počítači nedoporučujeme ukládat koncept s kontaktními údaji.
+
+Ověření této verze
+Prošla kontrola syntaxe JavaScriptu a CSS, sestavení, odkazů a identifikátorů. Automatizované DOM testy ověřily menu, světlý/tmavý režim, kontrolní seznam, předvolby a promítání, deset otázek tréninku, výsledek, tisk, formulářové chyby, duplicity týmů, koncept, souhlasy a potvrzení registrace se simulovanou odpovědí API. HTTP kontrola ověřila statické soubory, typy obsahu a nepřístupnost soukromých souborů.
+Tento balíček sám neprokazuje nové produkční nasazení. Během přípravy nebyl odeslán skutečný registrační e-mail a nový vzhled nebyl vizuálně ověřen v běžícím prohlížeči.
